@@ -1,0 +1,33 @@
+pipeline{
+    tools{
+        maven mymaven
+    }
+    agent any
+    stages{
+        stage('clonerepo'){
+            steps{
+                git https://github.com/Sindhu-Mano/Edurekapractice/tree/master/sample-project
+            }
+        }
+        stage('compilecode'){
+            steps{
+                sh 'mvn compile'
+            }
+        }
+        stage('codereview'){
+            steps{
+                sh 'mvn test'
+            }
+            post{
+                success{
+                    Junit 'target/surefire-reports/*.xml'
+                }
+            }
+        }
+        stage('package'){
+            steps{
+                sh 'mvn package'
+            }
+        }
+    }
+}
